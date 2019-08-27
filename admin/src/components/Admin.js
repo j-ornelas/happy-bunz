@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 
+const styles = {
+  deleteButton: {
+    color: 'red',
+    fontSize: 24,
+  }
+}
 
 export class Admin extends Component {
   state = {
@@ -14,6 +20,17 @@ export class Admin extends Component {
     fetch(`/api/test`)
       .then((res) => res.json())
       .then(info => console.log('info', info))
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    console.log('donuts: ', this.state.donuts)
+    // take this.state.donuts and save it to the database.
+    // maybe save everything and only use the most recent one in the app? idk yet.
+  }
+
+  handleRemove(index) {
+    console.log('removed!', index)
   }
 
   handleAddDonut(e) {
@@ -32,9 +49,12 @@ export class Admin extends Component {
   render() {
     return (
       <div>
-        {this.state.donuts.map((donut) => {
+        {this.state.donuts.map((donut, index) => {
           return (
-            <div key={donut.name}>{donut.name} - {donut.price}</div>
+            <div key={donut.name + index}>
+            <span>{donut.name} - {donut.price}</span>
+            <span style={styles.deleteButton} onClick={() => this.handleRemove(index)}>{`     x`}</span>
+            </div>
           )
         })}
         <p /><div>add new donut:</div>
@@ -47,7 +67,10 @@ export class Admin extends Component {
             Price:
             <input type="text" value={this.state.newPrice} onChange={(e) => this.handleChange('newPrice', e)} />
           </label>
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Add donut" />
+        </form>
+        <form onSubmit={(e) => this.handleSubmit(e)}>
+          <input type="submit" value="Save Changes" />
         </form>
       </div>
     )
