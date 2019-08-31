@@ -1,5 +1,5 @@
 require('dotenv').config();
-// require('./database/database.js');
+require('./database/');
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -11,13 +11,13 @@ app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 // /* ******** CONTROLLERS ******** */
-// const UserController = require('./database/controllers/user');
+const DonutController = require('./database/controllers/donuts');
 // const AuthController = require('./database/controllers/auth');
 // const ResetPWController = require('./database/controllers/resetPassword');
 // const CaseController = require('./database/controllers/case');
 // const EntryController = require('./database/controllers/entry');
 /* **** JWT PROTECTED ROUTES **** */
-// app.use('/users', UserController);
+app.use('/donuts', DonutController);
 // app.use('/case', CaseController);
 // app.use('/entry', EntryController);
 // /* ******* PUBLIC ROUTES ******* */
