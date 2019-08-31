@@ -9,17 +9,19 @@ const styles = {
 
 export class Admin extends Component {
   state = {
-    donuts: [
-      { name: 'chocolate', price: '1.99' }
-    ],
+    donuts: [],
     newName: '',
     newPrice: '',
   }
 
   componentDidMount() {
-    fetch(`/api/test`)
-      .then((res) => res.json())
-      .then(info => console.log('info', info))
+    this.fetchDonuts();
+  }
+
+  fetchDonuts() {
+    fetch('/donuts/all')
+      .then(res => res.json())
+      .then(donuts => this.setState({ donuts }));
   }
 
   handleRemove(index) {
@@ -28,9 +30,6 @@ export class Admin extends Component {
 
   handleAddDonut(e) {
     e.preventDefault();
-
-    const donuts = [ ...this.state.donuts ];
-
     const newDonut = {
       name: this.state.newName,
       price: this.state.newPrice,
@@ -43,8 +42,7 @@ export class Admin extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.success) donuts.push({ name: data.name, price: data.price })
-        if (data.success) this.setState({ newName: '', newPrice: '', donuts });
+        if (data.success) this.fetchDonuts()
         if (data.message) alert(data.message);
       })
       .catch(err => {
