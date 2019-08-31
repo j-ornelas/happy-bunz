@@ -12,6 +12,7 @@ router.get('/all', async (req, res) => {
 });
 
 router.post('/create', async (req, res) => {
+  // TODO: add auth, throw error if missing info.
   const { name, price } = req.body;
   Donut.create({ name, price })
     .then(dbres => {
@@ -21,6 +22,7 @@ router.post('/create', async (req, res) => {
 });
 
 router.delete('/delete', async (req, res) => {
+  // TODO: add auth, throw error if missing info.
   const { _id } = req.body;
   Donut.deleteOne({ _id })
     .then((dbres) => {
