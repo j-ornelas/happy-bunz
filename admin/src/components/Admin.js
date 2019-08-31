@@ -22,13 +22,6 @@ export class Admin extends Component {
       .then(info => console.log('info', info))
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
-    console.log('donuts: ', this.state.donuts)
-    // take this.state.donuts and save it to the database.
-    // maybe save everything and only use the most recent one in the app? idk yet.
-  }
-
   handleRemove(index) {
     console.log('removed!', index)
   }
@@ -37,9 +30,26 @@ export class Admin extends Component {
     e.preventDefault();
 
     const donuts = [ ...this.state.donuts ];
-    donuts.push({ name: this.state.newName, price: this.state.newPrice });
 
-    this.setState({ newName: '', newPrice: '', donuts });
+    const newDonut = {
+      name: this.state.newName,
+      price: this.state.newPrice,
+    };
+
+    fetch('/donuts/create', {
+      method: 'post',
+      body: JSON.stringify(newDonut),
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) donuts.push({ name: data.name, price: data.price })
+        if (data.success) this.setState({ newName: '', newPrice: '', donuts });
+        if (data.message) alert(data.message);
+      })
+      .catch(err => {
+        alert(err)
+      });
   }
 
   handleChange(prop, event) {
@@ -68,9 +78,6 @@ export class Admin extends Component {
             <input type="text" value={this.state.newPrice} onChange={(e) => this.handleChange('newPrice', e)} />
           </label>
           <input type="submit" value="Add donut" />
-        </form>
-        <form onSubmit={(e) => this.handleSubmit(e)}>
-          <input type="submit" value="Save Changes" />
         </form>
       </div>
     )
