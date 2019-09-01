@@ -34,7 +34,6 @@ export class Admin extends Component {
   }
 
   handleDateChange(date) {
-    console.log('date', date)
     this.setState({ pickupDate: date });
   }
 
@@ -106,7 +105,6 @@ export class Admin extends Component {
       zip: this.state.zip,
     }
 
-    console.log(this.state.quantities);
     fetch('/orders/create', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -136,7 +134,6 @@ export class Admin extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         this.setState({ todaysOrders: data, today: date || new Date() })
         this.generateDailyTotals()
       })
@@ -163,7 +160,6 @@ export class Admin extends Component {
         }
       })
     }
-    console.log('todaystotals', todaysTotals)
     this.setState({ todaysTotals });
   }
 
@@ -281,6 +277,10 @@ export class Admin extends Component {
           <li key={flavor}>{flavor} : {this.state.todaysTotals[flavor]}</li>
         ))}
       </ul>
+      {/* TODO: make this into a table of some kind.*/}
+      {this.state.todaysOrders.map((order) => (
+        <div key={order._id}>{JSON.stringify(order)}</div>
+      ))}
       </div>
     )
   }
