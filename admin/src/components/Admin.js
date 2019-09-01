@@ -18,19 +18,24 @@ export class Admin extends Component {
     //create order statE:
     numFlavors: ['','',''],
     quantities: {},
-    address: '',
+    city: 'Fresno',
     tomorrow: new Date().setDate(new Date().getDate()+1),
     // see orders:
     today: new Date(),
+    todaysOrders: [],
+    todaysTotals: {},
   }
 
   componentDidMount() {
     this.fetchDonuts();
+
+    //see orders:
+    this.handleViewDate()
   }
 
   handleDateChange(date) {
     console.log('date', date)
-    this.setState({ startDate: date });
+    this.setState({ pickupDate: date });
   }
 
   fetchDonuts() {
@@ -86,13 +91,82 @@ export class Admin extends Component {
     this.setState({ quantities });
   }
 
-  handleAddress(e) {
-    this.setState({ address: e.target.value });
+  handleTextChange(prop, e) {
+    this.setState({ [prop]: e.target.value });
   }
+
   handleOrder(e) {
     e.preventDefault();
 
+    const order = {
+      donuts: this.state.quantities,
+      address: this.state.address,
+      pickupDate: this.state.pickupDate || this.state.tomorrow,
+      name: this.state.name,
+      phone: this.state.phone,
+      city: this.state.city,
+      zip: this.state.zip,
+    }
+
     console.log(this.state.quantities);
+    fetch('/orders/create', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(order)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) this.setState({
+          address: '',
+          name: '',
+          phone: '',
+          city: '',
+          zip: '',
+          quantities: {}
+        })
+      })
+  }
+
+
+
+
+  handleViewDate(date) {
+    fetch('/orders/date', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pickupDate: date || this.state.today })
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        this.setState({ todaysOrders: data, today: date || new Date() })
+        this.generateDailyTotals()
+      })
+  }
+
+  generateDailyTotals() {
+    const orders = this.state.todaysOrders;
+    const todaysTotals = {};
+    for (let i = 0; i < orders.length; i++) {
+      let order = orders[i];
+      Object.keys(order.donuts).forEach(flavor => {
+        if (!todaysTotals[flavor]) {
+          if (!order.donuts[flavor]) {
+            todaysTotals[flavor] = 0;
+          } else {
+            todaysTotals[flavor] = parseInt(order.donuts[flavor]);
+          }
+        } else {
+          if (!order.donuts[flavor]) {
+            todaysTotals[flavor] += 0;
+          } else {
+            todaysTotals[flavor] += parseInt(order.donuts[flavor]);
+          }
+        }
+      })
+    }
+    console.log('todaystotals', todaysTotals)
+    this.setState({ todaysTotals });
   }
 
   render() {
@@ -127,9 +201,9 @@ export class Admin extends Component {
         <h3>create order:</h3>
         <span>order date:</span>
         <DatePicker
-          selected={this.state.tomorrow}
+          selected={this.state.pickupDate || this.state.tomorrow}
           onChange={this.handleDateChange.bind(this)}
-          minDate={this.state.tomorrow}
+          minDate={this.state.today}
         />
         {this.state.donuts.map(({ name, _id }) => (
           <div key={name}>
@@ -142,12 +216,52 @@ export class Admin extends Component {
             />
           </div>
         ))}
-        <input
-          type="text"
-          placeholder="address"
-          value={this.state.address}
-          onChange={(e) => this.handleAddress(e)}
-        />
+        <p />
+        <div>
+          <span>Name: </span>
+          <input
+            type="text"
+            placeholder="name"
+            value={this.state.name}
+            onChange={(e) => this.handleTextChange('name', e)}
+          />
+        </div>
+        <div>
+          <span>Address: </span>
+          <input
+            type="text"
+            placeholder="address"
+            value={this.state.address}
+            onChange={(e) => this.handleTextChange('address', e)}
+          />
+        </div>
+        <div>
+          <span>City: </span>
+          <input
+            type="text"
+            placeholder="city"
+            value={this.state.city}
+            onChange={(e) => this.handleTextChange('city', e)}
+          />
+        </div>
+        <div>
+          <span>Zip: </span>
+          <input
+            type="text"
+            placeholder="zip"
+            value={this.state.zip}
+            onChange={(e) => this.handleTextChange('zip', e)}
+          />
+        </div>
+        <div>
+          <span>Phone: </span>
+          <input
+            type="text"
+            placeholder="phone #"
+            value={this.state.phone}
+            onChange={(e) => this.handleTextChange('phone', e)}
+          />
+        </div>
         <form onSubmit={this.handleOrder.bind(this)}>
         <input
           type="submit"
@@ -161,8 +275,13 @@ export class Admin extends Component {
       <h3>see orders:</h3>
       <DatePicker
         selected={this.state.today}
-        onChange={this.handleDateChange.bind(this)}
+        onChange={this.handleViewDate.bind(this)}
       />
+      <ul>
+        {Object.keys(this.state.todaysTotals).map((flavor) => (
+          <li key={flavor}>{flavor} : {this.state.todaysTotals[flavor]}</li>
+        ))}
+      </ul>
       </div>
     )
   }
