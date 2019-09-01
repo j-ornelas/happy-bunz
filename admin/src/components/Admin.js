@@ -96,8 +96,6 @@ export class Admin extends Component {
   }
 
   handleOrder(e) {
-    e.preventDefault();
-
     const order = {
       donuts: this.state.quantities,
       address: this.state.address,
@@ -205,6 +203,7 @@ export class Admin extends Component {
           onChange={this.handleDateChange.bind(this)}
           minDate={this.state.today}
         />
+        <p/>
         {this.state.donuts.map(({ name, _id }) => (
           <div key={name}>
             <span>{name}</span>
