@@ -2,6 +2,7 @@ require('dotenv').config();
 require('./database/');
 const express = require('express');
 const morgan = require('morgan');
+const path = require('path');
 const bodyParser = require('body-parser');
 /* ******** SERVER CONFIG ******** */
 const app = express();
@@ -10,6 +11,7 @@ app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, '../admin/build')));
 // /* ******** CONTROLLERS ******** */
 const DonutController = require('./database/controllers/donuts');
 const OrderController = require('./database/controllers/orders');
@@ -20,8 +22,5 @@ app.use('/orders', OrderController);
 // app.use('/auth', AuthController);
 // app.use('/reset', ResetPWController);
 /* ******** SERVER INIT ******** */
-app.get('/', (req, res) => res.send('Happy Bunz server is live!!!')); // visual live-check
-app.get('/api/test', (req, res) => {
-  res.send({ test: 'hello' });
-});
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'build', 'index.html')));
 app.listen(port, () => console.log(`ToProovIt server listening on port ${port}!`));
