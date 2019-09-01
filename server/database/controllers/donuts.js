@@ -26,8 +26,13 @@ router.delete('/delete', async (req, res) => {
   const { _id } = req.body;
   Donut.deleteOne({ _id })
     .then((dbres) => {
-      console.log('dbres', dbres);
-    });
+      if (dbres.deletedCount) {
+        res.json({ success: true });
+      } else {
+        res.json({ message: 'Donut not deleted. Try again another time.' });
+      }
+    })
+    .catch(err => res.send({ message: `Donut not deleted. Error info: ${err.toString()}` }));
 });
 
 
