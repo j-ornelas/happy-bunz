@@ -12,14 +12,10 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 // /* ******** CONTROLLERS ******** */
 const DonutController = require('./database/controllers/donuts');
-// const AuthController = require('./database/controllers/auth');
-// const ResetPWController = require('./database/controllers/resetPassword');
-// const CaseController = require('./database/controllers/case');
-// const EntryController = require('./database/controllers/entry');
+const OrderController = require('./database/controllers/orders');
 /* **** JWT PROTECTED ROUTES **** */
 app.use('/donuts', DonutController);
-// app.use('/case', CaseController);
-// app.use('/entry', EntryController);
+app.use('/orders', OrderController);
 // /* ******* PUBLIC ROUTES ******* */
 // app.use('/auth', AuthController);
 // app.use('/reset', ResetPWController);
