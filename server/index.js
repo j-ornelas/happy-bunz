@@ -11,7 +11,7 @@ app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, '../admin/build')));
+app.use(express.static(path.join(__dirname, 'build')));
 // /* ******** CONTROLLERS ******** */
 const DonutController = require('./database/controllers/donuts');
 const OrderController = require('./database/controllers/orders');
