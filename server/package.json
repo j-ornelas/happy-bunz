@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd ../admin && npm run build && cd ../server && rm -rf build && mv ../admin/build build",
     "start": "nodemon index.js",
     "start:prod": "node index.js"
   },
