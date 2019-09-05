@@ -79,6 +79,9 @@ class ViewOrders extends Component {
               <div><span style={styles.bold}>Phone:</span> {order.phone}</div>
             </div>
           ))}
+          {this.state.todaysOrders.length === 0 && (
+            <div>no orders for {this.state.today.toLocaleDateString()}</div>
+          )}
         </div>
       </div>
     )
