@@ -68,11 +68,37 @@ class ViewOrders extends Component {
           ))}
         </ul>
         {/* TODO: make this into a table of some kind.*/}
-        {this.state.todaysOrders.map((order) => (
-          <div key={order._id}>{JSON.stringify(order)}</div>
-        ))}
+        <div style={styles.ordersContainer}>
+          {this.state.todaysOrders.map((order, index) => (
+            <div style={index % 2 === 0 ? styles.evenCell : styles.oddCell} key={order._id}>
+              <div><span style={styles.bold}>Donuts:</span> {JSON.stringify(order.donuts)}</div>
+              <div><span style={styles.bold}>Name:</span> {order.name}</div>
+              <div><span style={styles.bold}>Address:</span> {order.address}</div>
+              <div><span style={styles.bold}>City:</span> {order.city}</div>
+              <div><span style={styles.bold}>Zip:</span> {order.zip}</div>
+              <div><span style={styles.bold}>Phone:</span> {order.phone}</div>
+            </div>
+          ))}
+        </div>
       </div>
     )
+  }
+}
+
+const styles = {
+  evenCell: {
+    backgroundColor: 'offwhite',
+    padding: '10px'
+  },
+  oddCell: {
+    backgroundColor: 'lightgrey',
+    padding: '10px',
+  },
+  ordersContainer: {
+    border: '0.5px solid lightgrey'
+  },
+  bold: {
+    fontWeight: 'bold'
   }
 }
 
