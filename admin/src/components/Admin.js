@@ -75,7 +75,7 @@ export class Admin extends Component {
         if (data.message) alert(data.message);
       })
       .catch(err => {
-        alert(err)
+        alert(err.toString())
       });
   }
 
@@ -127,16 +127,20 @@ export class Admin extends Component {
 
 
   handleViewDate(date) {
+    let dateToCheck = date || this.state.today;
+    let pickupDate = dateToCheck.toLocaleDateString();
     fetch('/orders/date', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pickupDate: date || this.state.today })
+      body: JSON.stringify({ pickupDate: pickupDate })
     })
       .then(res => res.json())
       .then(data => {
+        if (data.message) alert(data.message);
         this.setState({ todaysOrders: data, today: date || new Date() })
         this.generateDailyTotals()
       })
+      .catch(err => alert(err.toString()))
   }
 
   generateDailyTotals() {
@@ -193,7 +197,7 @@ export class Admin extends Component {
 
 
         <h3>create order:</h3>
-        <span>order date:</span>
+        <span>pickup / delivery date: </span>
         <DatePicker
           selected={this.state.pickupDate || this.state.tomorrow}
           onChange={this.handleDateChange.bind(this)}
