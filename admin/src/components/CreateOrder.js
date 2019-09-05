@@ -7,22 +7,22 @@ class CreateOrder extends Component {
     numFlavors: ['','',''],
     quantities: {},
     city: 'Fresno',
-    tomorrow: new Date().setDate(new Date().getDate()+1),
+    pickupDate: new Date().setDate(new Date().getDate()+1),
   }
 
   handleTextChange(prop, e) {
     this.setState({ [prop]: e.target.value });
   }
 
-  handleDateChange(date) {
-    this.setState({ pickupDate: date });
+  handleDateChange(pickupDate) {
+    this.setState({ pickupDate });
   }
 
   handleOrder(e) {
     const order = {
       donuts: this.state.quantities,
       address: this.state.address,
-      pickupDate: this.state.pickupDate || this.state.tomorrow,
+      pickupDate: this.state.pickupDate.toLocaleDateString(),
       name: this.state.name,
       phone: this.state.phone,
       city: this.state.city,
@@ -60,7 +60,7 @@ class CreateOrder extends Component {
         <h3>create order:</h3>
         <span>pickup / delivery date: </span>
         <DatePicker
-          selected={this.state.pickupDate || this.state.tomorrow}
+          selected={this.state.pickupDate}
           onChange={this.handleDateChange.bind(this)}
           minDate={this.state.today}
         />
