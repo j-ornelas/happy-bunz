@@ -11,16 +11,9 @@ router.post('/date', async (req, res) => {
   const { pickupDate } = req.body;
   if (!pickupDate) return res.json({ message: 'Did not submit a date' });
 
-  return Order.find({
-    pickupDate: new Date(pickupDate).toLocaleDateString()
-  })
-    .then(info => {
-      console.log('info', info)
-      res.json(info);
-    })
-    .catch(err => {
-      res.json({ message: `Something went wrong fetching orders for this day. More info: ${err.toString()}` });
-    });
+  return Order.find({ pickupDate })
+    .then(info => res.json(info))
+    .catch(err => res.json({ message: `Something went wrong fetching orders for this day. More info: ${err.toString()}` }));
 });
 
 router.post('/create', async (req, res) => {
