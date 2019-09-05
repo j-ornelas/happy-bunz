@@ -1,9 +1,14 @@
 import React from 'react';
-import { Admin } from './components';
+import { Admin } from './components/Admin';
+import ComingSoon from './components/ComingSoon';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <Admin />
+    <Router>
+      <Route exact path="/" component={ComingSoon} />
+      <Route path="/admin" component={Admin} />
+    </Router>
   );
 }
 
