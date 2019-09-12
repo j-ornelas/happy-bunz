@@ -16,6 +16,18 @@ router.post('/date', async (req, res) => {
     .catch(err => res.json({ message: `Something went wrong fetching orders for this day. More info: ${err.toString()}` }));
 });
 
+// DELETE order from DB
+router.delete('/id', async (req, res) => {
+  const { _id } = req.body;
+  if (!_id) return res.json({ message: 'Did not send the server enough info. Contact admin if problem continues.' });
+  return Order.deleteOne({ _id })
+    .then(dbRes => {
+      if (dbRes.deletedCount) return res.json({ success: true });
+      throw new Error('Did not successfully delete item from DB. if issue persists, contact admin');
+    })
+    .catch(err => res.json({ message: `Something went wrong deleting your order. More info: ${err.toString()}` }));
+});
+
 router.post('/create', async (req, res) => {
   // TODO: add auth, throw error if missing info.
   const {
@@ -52,5 +64,7 @@ router.post('/create', async (req, res) => {
     })
     .catch(err => res.send({ message: `Couldn't save order. Try again later. Error info: ${err.toString()}` }));
 });
+
+
 
 module.exports = router;
