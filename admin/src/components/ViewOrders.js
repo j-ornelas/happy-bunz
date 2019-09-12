@@ -55,19 +55,23 @@ class ViewOrders extends Component {
   }
 
   handleDelete(order) {
-    const { _id } = order;
-    if (!_id) return alert('something is wrong with this order. Contact backend admin to manually delete.')
-    fetch('/orders/id', {
-      method: 'delete',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ _id })
-    })
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      const { _id } = order;
+      if (!_id) return alert('something is wrong with this order. Contact backend admin to manually delete.')
+      fetch('/orders/id', {
+        method: 'delete',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ _id })
+      })
       .then(res => res.json())
       .then(data => {
         if (data.message) alert(data.message);
-        if (data.success) this.handleViewDate();
+        if (data.success) this.handleViewDate(this.state.today);
       })
       .catch(err => alert(err.toString()))
+    } else {
+      return;
+    }
   }
 
   render() {
