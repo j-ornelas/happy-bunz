@@ -67,7 +67,6 @@ class ViewOrders extends Component {
             <li key={flavor}>{flavor} : {this.state.todaysTotals[flavor]}</li>
           ))}
         </ul>
-        {/* TODO: make this into a table of some kind.*/}
         <div style={styles.ordersContainer}>
           {this.state.todaysOrders.map((order, index) => (
             <div style={index % 2 === 0 ? styles.evenCell : styles.oddCell} key={order._id}>
