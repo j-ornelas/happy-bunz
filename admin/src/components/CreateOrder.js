@@ -7,7 +7,7 @@ class CreateOrder extends Component {
     numFlavors: ['','',''],
     quantities: {},
     city: 'Fresno',
-    pickupDate: new Date().setDate(new Date().getDate()+1),
+    pickupDate: new Date(new Date().setDate(new Date().getDate()+1)),
   }
 
   handleTextChange(prop, e) {
@@ -19,6 +19,7 @@ class CreateOrder extends Component {
   }
 
   handleOrder(e) {
+    e.preventDefault();
     const order = {
       donuts: this.state.quantities,
       address: this.state.address,
@@ -71,7 +72,7 @@ class CreateOrder extends Component {
             <input
               placeholder="leave empty for 0"
               type="text"
-              value={this.state.quantities[name]}
+              value={this.state.quantities[name] || ""}
               onChange={(e) => this.handleQuantity(name, e)}
             />
           </div>
