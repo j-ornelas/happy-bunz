@@ -54,6 +54,22 @@ class ViewOrders extends Component {
     this.setState({ todaysTotals });
   }
 
+  handleDelete(order) {
+    const { _id } = order;
+    if (!_id) return alert('something is wrong with this order. Contact backend admin to manually delete.')
+    fetch('/orders/id', {
+      method: 'delete',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ _id })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.message) alert(data.message);
+        if (data.success) this.handleViewDate();
+      })
+      .catch(err => alert(err.toString()))
+  }
+
   render() {
     return (
       <div>
@@ -76,6 +92,7 @@ class ViewOrders extends Component {
               <div><span style={styles.bold}>City:</span> {order.city}</div>
               <div><span style={styles.bold}>Zip:</span> {order.zip}</div>
               <div><span style={styles.bold}>Phone:</span> {order.phone}</div>
+              <div onClick={() => this.handleDelete(order)} style={styles.deleteOrder}>{"   x"}</div>
             </div>
           ))}
           {this.state.todaysOrders.length === 0 && (
@@ -90,17 +107,33 @@ class ViewOrders extends Component {
 const styles = {
   evenCell: {
     backgroundColor: 'offwhite',
-    padding: '10px'
+    padding: '10px',
+    position: 'relative',
   },
   oddCell: {
     backgroundColor: 'lightgrey',
     padding: '10px',
+    position: 'relative',
   },
   ordersContainer: {
     border: '0.5px solid lightgrey'
   },
   bold: {
     fontWeight: 'bold'
+  },
+  deleteOrder: {
+    color: '#fff',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: '24px',
+    backgroundColor: 'red',
+    height: '40px',
+    width: '40px',
+    borderRadius: '20px',
+    position: 'absolute',
+    right: -10,
+    top: -10,
   }
 }
 
