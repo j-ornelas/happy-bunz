@@ -35,7 +35,7 @@ class ViewOrders extends Component {
     const todaysTotals = {};
     for (let i = 0; i < orders.length; i++) {
       let order = orders[i];
-      Object.keys(order.donuts).forEach(flavor => {
+      if (order.donuts) Object.keys(order.donuts).forEach(flavor => {
         if (!todaysTotals[flavor]) {
           if (!order.donuts[flavor]) {
             todaysTotals[flavor] = 0;
